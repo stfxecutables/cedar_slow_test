@@ -33,6 +33,9 @@ bash slow_script.sh
 You should see output like:
 
 ```
+real	1m57.432s
+user	0m2.235s
+sys	0m1.133s
 ```
 
 To see how random this is, just run a bash / zsh loop to repeat this:
