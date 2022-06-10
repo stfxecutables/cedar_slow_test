@@ -178,7 +178,42 @@ $ salloc --time=3:0:0 --ntasks=1 --mem-per-cpu=16G --account=def-jlevman
   user	0m1.881s
   sys	0m2.490s
 
+  real	6m8.209s
+  user	0m1.842s
+  sys	0m2.184s
+
+  real	7m37.467s
+  user	0m1.778s
+  sys	0m2.081s
+
+  real	6m24.056s
+  user	0m1.877s
+  sys	0m2.119s
+
+  real	9m26.496s
+  user	0m1.965s
+  sys	0m2.275s
+
+  real	6m47.930s
+  user	0m1.957s
+  sys	0m2.300s
+
+^CTraceback (most recent call last):
+  File "really_slow.py", line 9, in <module>
+    import numpy
+  File "/scratch/dberger/cedar_slow_test/.venv/lib/python3.8/site-packages/numpy/__init__.py", line 155, in <module>
+    from . import random
+  File "/scratch/dberger/cedar_slow_test/.venv/lib/python3.8/site-packages/numpy/random/__init__.py", line 180, in <module>
+    from . import _pickle
+  File "/scratch/dberger/cedar_slow_test/.venv/lib/python3.8/site-packages/numpy/random/_pickle.py", line 6, in <module>
+    from ._generator import Generator
+  File "<frozen importlib._bootstrap>", line 389, in parent
+KeyboardInterrupt
+
+# I terminated the job here, the point has been made. As usual, we are stuck in imports.
 ```
+
+If anything, the runtimes even look worse.
 
 By contrast, on Graham, results of the `still_slow.sh` test are fast, as expected:
 
