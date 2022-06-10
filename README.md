@@ -89,141 +89,160 @@ sys	0m0.755s
 
 You can try this in a Cedar interactive-job too, and the results will be just as bad, maybe worse:
 
-```bash
+```
 $ salloc --time=1:0:0 --ntasks=4 --mem-per-cpu=16G --account=def-jlevman
-```
-```
-salloc: Pending job allocation 36126573
-salloc: job 36126573 queued and waiting for resources
-salloc: job 36126573 has been allocated resources
-salloc: Granted job allocation 36126573
-salloc: Waiting for resource configuration
-salloc: Nodes cdr861 are ready for job
-```
 
-```bash
+  salloc: Pending job allocation 36126573
+  salloc: job 36126573 queued and waiting for resources
+  salloc: job 36126573 has been allocated resources
+  salloc: Granted job allocation 36126573
+  salloc: Waiting for resource configuration
+  salloc: Nodes cdr861 are ready for job
+
 [dberger@cdr861 cedar_slow_test]$ for x in 1 2 3 4 5 6 7 8 9 10; do bash slow_script.sh; done;
-```
 
-```
-real	4m47.400s
-user	0m2.383s
-sys	0m2.722s
+  real	4m47.400s
+  user	0m2.383s
+  sys	0m2.722s
 
-real	4m56.302s
-user	0m2.306s
-sys	0m2.699s
+  real	4m56.302s
+  user	0m2.306s
+  sys	0m2.699s
 
-real	5m44.728s
-user	0m2.284s
-sys	0m2.544s
+  real	5m44.728s
+  user	0m2.284s
+  sys	0m2.544s
 
-real	6m50.440s
-user	0m2.253s
-sys	0m2.730s
+  real	6m50.440s
+  user	0m2.253s
+  sys	0m2.730s
 
-real	7m38.160s
-user	0m2.182s
-sys	0m2.409s
+  real	7m38.160s
+  user	0m2.182s
+  sys	0m2.409s
 
-real	7m52.240s
-user	0m2.204s
-sys	0m2.439s
+  real	7m52.240s
+  user	0m2.204s
+  sys	0m2.439s
 
-real	7m40.668s
-user	0m2.257s
-sys	0m2.292s
+  real	7m40.668s
+  user	0m2.257s
+  sys	0m2.292s
 
-real	7m27.859s
-user	0m2.264s
-sys	0m2.531s
+  real	7m27.859s
+  user	0m2.264s
+  sys	0m2.531s
 
-real	5m50.572s
-user	0m2.239s
-sys	0m2.389s
-salloc: Job 36126573 has exceeded its time limit and its allocation has been revoked
+  real	5m50.572s
+  user	0m2.239s
+  sys	0m2.389s
+  salloc: Job 36126573 has exceeded its time limit and its allocation has been revoked
 
-slurmstepd: error: *** STEP 36126573.interactive ON cdr861 CANCELLED AT 2022-06-10T09:54:33 DUE TO TIME LIMIT ***
-srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
-srun: error: cdr861: task 0: Killed
-srun: launch/slurm: _step_signal: Terminating StepId=36126573.interactive
-srun: error: Timed out waiting for job step to complete
+  slurmstepd: error: *** STEP 36126573.interactive ON cdr861 CANCELLED AT 2022-06-10T09:54:33 DUE TO TIME LIMIT ***
+  srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+  srun: error: cdr861: task 0: Killed
+  srun: launch/slurm: _step_signal: Terminating StepId=36126573.interactive
+  srun: error: Timed out waiting for job step to complete
 ```
 
 Maybe this is because in the interactive job we have to reach across to the login node to get
 our `.venv` files? But we can test this is not the case in an interactive job with `still_slow.sh`:
 
-```bash
+```
+$ salloc --time=3:0:0 --ntasks=1 --mem-per-cpu=16G --account=def-jlevman
+
+  salloc: Pending job allocation 36134385
+  salloc: job 36134385 queued and waiting for resources
+  salloc: job 36134385 has been allocated resources
+  salloc: Granted job allocation 36134385
+
+[dberger@cdr861 cedar_slow_test]$ bash still_slow.sh
+
+  real	0m3.899s
+  user	0m0.268s
+  sys	0m3.014s
+  Un-tarred .venv to temp dir. Time elapsed above.
+  Copied single script file to temp dir. Time elapsed above.
+  Now code is setup all in the temp directory:
+  total 8.0K
+  drwxr-x---  3 dberger dberger   41 Jun 10 10:14 .
+  drwxr-xr-x 11 root    root     236 Jun 10 10:14 ..
+  -rw-r-----  1 dberger dberger 5.9K Jun 10 10:14 really_slow.py
+  drwxr-x---  4 dberger dberger   46 Jun 10 08:37 .venv
+
+  real	8m29.602s
+  user	0m1.898s
+  sys	0m2.300s
+
+  real	7m6.051s
+  user	0m1.881s
+  sys	0m2.490s
+
 ```
 
 By contrast, on Graham, results of the `still_slow.sh` test are fast, as expected:
 
-```bash
+```
 $ salloc --time=1:0:0 --ntasks=1 --mem-per-cpu=16GB --account=def-jlevman
-```
-```
-salloc: Pending job allocation 61912016
-salloc: job 61912016 queued and waiting for resources
-salloc: job 61912016 has been allocated resources
-salloc: Granted job allocation 61912016
-salloc: Waiting for resource configuration
-salloc: Nodes gra1136 are ready for job
-```
 
-```bash
+  salloc: Pending job allocation 61912016
+  salloc: job 61912016 queued and waiting for resources
+  salloc: job 61912016 has been allocated resources
+  salloc: Granted job allocation 61912016
+  salloc: Waiting for resource configuration
+  salloc: Nodes gra1136 are ready for job
+
 [dberger@gra1136 cedar_slow_test]$ bash still_slow.sh
-```
 
-```
-real	0m3.089s
-user	0m0.206s
-sys	0m2.861s
-Un-tarred .venv to temp dir. Time elapsed above.
-Copied single script file to temp dir. Time elapsed above.
-Now code is setup all in the temp directory:
-total 20K
-drwxr-x---  3 dberger dberger 4.0K Jun 10 12:38 .
-drwxr-xr-x 36 root    root    4.0K Jun 10 12:37 ..
--rw-r-----  1 dberger dberger 5.9K Jun 10 12:38 really_slow.py
-drwxr-x---  4 dberger dberger 4.0K Jun 10 12:22 .venv
+  real	0m3.089s
+  user	0m0.206s
+  sys	0m2.861s
+  Un-tarred .venv to temp dir. Time elapsed above.
+  Copied single script file to temp dir. Time elapsed above.
+  Now code is setup all in the temp directory:
+  total 20K
+  drwxr-x---  3 dberger dberger 4.0K Jun 10 12:38 .
+  drwxr-xr-x 36 root    root    4.0K Jun 10 12:37 ..
+  -rw-r-----  1 dberger dberger 5.9K Jun 10 12:38 really_slow.py
+  drwxr-x---  4 dberger dberger 4.0K Jun 10 12:22 .venv
 
-real	0m53.129s
-user	0m2.344s
-sys	0m1.873s
+  real	0m53.129s
+  user	0m2.344s
+  sys	0m1.873s
 
-real	0m2.657s
-user	0m1.467s
-sys	0m0.584s
+  real	0m2.657s
+  user	0m1.467s
+  sys	0m0.584s
 
-real	0m2.546s
-user	0m1.382s
-sys	0m0.576s
+  real	0m2.546s
+  user	0m1.382s
+  sys	0m0.576s
 
-real	0m2.524s
-user	0m1.405s
-sys	0m0.551s
+  real	0m2.524s
+  user	0m1.405s
+  sys	0m0.551s
 
-real	0m2.545s
-user	0m1.449s
-sys	0m0.517s
+  real	0m2.545s
+  user	0m1.449s
+  sys	0m0.517s
 
-real	0m2.573s
-user	0m1.435s
-sys	0m0.563s
+  real	0m2.573s
+  user	0m1.435s
+  sys	0m0.563s
 
-real	0m2.550s
-user	0m1.406s
-sys	0m0.563s
+  real	0m2.550s
+  user	0m1.406s
+  sys	0m0.563s
 
-real	0m2.530s
-user	0m1.418s
-sys	0m0.533s
+  real	0m2.530s
+  user	0m1.418s
+  sys	0m0.533s
 
-real	0m2.573s
-user	0m1.424s
-sys	0m0.550s
+  real	0m2.573s
+  user	0m1.424s
+  sys	0m0.550s
 
-real	0m2.633s
-user	0m1.426s
-sys	0m0.543s
+  real	0m2.633s
+  user	0m1.426s
+  sys	0m0.543s
 ```
