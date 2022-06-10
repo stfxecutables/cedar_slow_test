@@ -213,7 +213,8 @@ KeyboardInterrupt
 # I terminated the job here, the point has been made. As usual, we are stuck in imports.
 ```
 
-If anything, the runtimes even look worse.
+If anything, the runtimes even look worse. Interestingly, you can see the un`tar` was
+actually quite fast, suggesting that ***it is reads, not writes*** that are the problem.
 
 By contrast, on Graham, results of the `still_slow.sh` test are fast, as expected:
 
